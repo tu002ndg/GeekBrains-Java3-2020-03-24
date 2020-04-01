@@ -1,9 +1,5 @@
 package lesson1.ex2;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 public class GenConstructor {
     private float val;
 

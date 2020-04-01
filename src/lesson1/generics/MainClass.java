@@ -1,4 +1,4 @@
-package lesson1.ex2.generics;
+package lesson1.generics;
 
 public class MainClass {
     public static void main(String[] args) {

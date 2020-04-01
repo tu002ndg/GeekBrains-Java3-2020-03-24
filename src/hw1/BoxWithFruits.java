@@ -3,9 +3,10 @@ package hw1;
 import hw1.fruits.Fruit;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BoxWithFruits<T extends Fruit> {
-    private ArrayList<T> fruits = new ArrayList();
+    private List<T> fruits = new ArrayList();
 
     private float weight;
     private T t = null;

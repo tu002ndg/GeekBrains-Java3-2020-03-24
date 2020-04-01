@@ -1,4 +1,4 @@
-package lesson1.ex2.generics.fruits;
+package lesson1.generics.fruits;
 
 public class Apple extends Fruit {
 }

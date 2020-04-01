@@ -1,7 +1,7 @@
-package lesson1.ex2.generics;
+package lesson1.generics;
 
 
-import lesson1.ex2.generics.fruits.Fruit;
+import lesson1.generics.fruits.Fruit;
 
 public class BoxWithFruits<T extends Fruit> {
     private float weight;
