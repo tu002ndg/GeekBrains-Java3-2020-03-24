@@ -49,6 +49,27 @@ public class BaseAuthService implements AuthService {
     }
 
     @Override
+    public int updateUsername(String username, String newUsername) {
+
+        // check if the new username exists
+        for (UserData user: USER_DATA
+             ) {
+            if(user.username.equals(newUsername)) {
+                return -1;
+            }
+        }
+
+        //replace the old value of username by the new one
+        for (UserData user : USER_DATA) {
+            if(user.username.equals(username)) {
+                user.username = newUsername;
+                break;
+            }
+        }
+        return 0;
+    }
+
+    @Override
     public void start() {
         System.out.println("Сервис аутентификации запущен");
     }

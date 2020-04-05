@@ -1,10 +1,7 @@
 package ru.geekbrains.java3.client.model;
 
 import ru.geekbrains.java3.client.Command;
-import ru.geekbrains.java3.client.command.AuthCommand;
-import ru.geekbrains.java3.client.command.ErrorCommand;
-import ru.geekbrains.java3.client.command.MessageCommand;
-import ru.geekbrains.java3.client.command.UpdateUsersListCommand;
+import ru.geekbrains.java3.client.command.*;
 import ru.geekbrains.java3.client.controller.AuthEvent;
 import ru.geekbrains.java3.client.controller.ClientController;
 import ru.geekbrains.java3.client.controller.MessageHandler;
@@ -69,6 +66,15 @@ public class NetworkService {
                         case ERROR: {
                             ErrorCommand commandData = (ErrorCommand) command.getData();
                             controller.showErrorMessage(commandData.getErrorMessage());
+                            break;
+                        }
+                        case UPDATE_USERNAME: {
+                            UpdateUserNameCommand commandData =
+                                    (UpdateUserNameCommand) command.getData();
+                            String username = commandData.getUsername();
+                            String newUsername = commandData.getNewUsername();
+                            List<String> users = commandData.getUsers();
+                            controller.updateUserInList(username, newUsername, users);
                             break;
                         }
                         case UPDATE_USERS_LIST: {

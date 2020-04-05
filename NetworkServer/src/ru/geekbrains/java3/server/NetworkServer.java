@@ -2,7 +2,8 @@ package ru.geekbrains.java3.server;
 
 import ru.geekbrains.java3.client.Command;
 import ru.geekbrains.java3.server.auth.AuthService;
-import ru.geekbrains.java3.server.auth.BaseAuthService;
+//import ru.geekbrains.java3.server.auth.BaseAuthService;
+import ru.geekbrains.java3.server.auth.DbSqlLiteAuthService;
 import ru.geekbrains.java3.server.client.ClientHandler;
 
 import java.io.IOException;
@@ -22,7 +23,8 @@ public class NetworkServer {
 
     public NetworkServer(int port) {
         this.port = port;
-        this.authService = new BaseAuthService();
+        this.authService = new DbSqlLiteAuthService();
+        //this.authService = new BaseAuthService();
     }
 
 
@@ -59,6 +61,7 @@ public class NetworkServer {
         return authService;
     }
 
+
     public /*synchronized */ void broadcastMessage(Command message,  ClientHandler owner)
             throws IOException {
         for (ClientHandler client: clients
@@ -67,6 +70,7 @@ public class NetworkServer {
                 client.sendMessage(message);
         }
     }
+
 
     public /* synchronized */ void sendMessage(String receiver, Command commandMessage)
             throws IOException {
@@ -80,12 +84,21 @@ public class NetworkServer {
 
     }
 
+    public /* synchronized */  void updateUsername(String username, String NewUsername)
+            throws IOException {
+        List<String> users = getAllUsernames();
+        broadcastMessage(Command.updateUserNameCommand(username, NewUsername, users),
+                null);
+    }
+
+
     public /* synchronized */ void subscribe(ClientHandler clientHandler)
             throws IOException {
         clients.add(clientHandler);
         List<String> users = getAllUsernames();
         broadcastMessage(Command.updateUsersListCommand(users), null);
     }
+
 
     public /* synchronized */ void unsubscribe(ClientHandler clientHandler)
             throws IOException {

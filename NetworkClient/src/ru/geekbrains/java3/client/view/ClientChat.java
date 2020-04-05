@@ -13,13 +13,14 @@ public class ClientChat extends JFrame {
     private JTextField txtMessage;
     private JButton btnSend;
     private JTextArea txtChatArea;
-
+    private JButton btnUpdateNickname;
     private ClientController controller;
 
     public ClientChat(ClientController controller) {
+
         this.controller = controller;
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(640, 480);
+        setSize(480, 320);
         setLocationRelativeTo(null);
         setContentPane(pnlMain);
         addListeners();
@@ -31,10 +32,26 @@ public class ClientChat extends JFrame {
         });
     }
 
+//    public JList<String> getUsersList() {
+//
+//        return usersList;
+//    }
+
     private void addListeners() {
         btnSend.addActionListener(e->sendMessage());
         txtMessage.addActionListener(e->sendMessage());
+        btnUpdateNickname.addActionListener(e ->updateNickname());
     }
+
+    private void updateNickname() {
+        String newUsername =
+                JOptionPane.showInputDialog(
+                        "Новый nickname?","newUser");
+        if (newUsername==null || newUsername.trim().isEmpty())
+            return;
+        controller.updateUsername(newUsername.trim());
+    }
+
 
     private void sendMessage() {
         String message =
@@ -81,5 +98,6 @@ public class ClientChat extends JFrame {
             usersList.setModel(model);
         });
     }
-}
+
+ }
 

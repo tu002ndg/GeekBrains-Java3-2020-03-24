@@ -15,9 +15,6 @@ public class ClientController {
     private final ClientChat clientChat;
     private String nickname;
 
-    public ClientChat getClientChat() {
-        return clientChat;
-    }
 
     public ClientController(String serverHost, int serverPort) {
         this.networkService = new NetworkService(serverHost, serverPort);
@@ -71,6 +68,14 @@ public class ClientController {
         }
     }
 
+    public void updateUsername(String newUsername) {
+        try {
+            networkService.sendCommand(updateUserNameCommand(nickname,newUsername,null));
+        } catch (IOException e) {
+            showErrorMessage(e.getMessage());
+        }
+    }
+
 
     public void sendPrivateMessage(String username, String message) {
         try {
@@ -103,5 +108,13 @@ public class ClientController {
         users.remove(nickname);
         users.add(0, "All");
         clientChat.updateUsers(users);
+    }
+
+    public void updateUserInList(String username, String newUsername, List<String> users) {
+        if (nickname.equals(username)) {
+            nickname = newUsername;
+            clientChat.setTitle(nickname);
+        }
+        updateUsersList(users);
     }
 }
