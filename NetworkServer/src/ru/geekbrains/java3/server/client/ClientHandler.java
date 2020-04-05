@@ -78,6 +78,29 @@ public class ClientHandler {
                 case END:
                     System.out.println("Received 'END' command");
                     return;
+                case UPDATE_USERNAME: {
+                    UpdateUserNameCommand commandData =
+                            (UpdateUserNameCommand) command.getData();
+                    String username = commandData.getUsername();
+                    String newUsername = commandData.getNewUsername();
+                    //Обновить nickname в источнике данных
+                    int isUpdated =
+                            networkServer.getAuthService()
+                                    .updateUsername(username,newUsername);
+                    if (isUpdated==0) {
+                        //Если успешно обновлено, то
+                        // 1. обновить имя в текущем списке на сервере
+                        nickname = newUsername;
+                        // 2. отправить всем обновленный список
+                        networkServer.updateUsername(username, nickname);
+                    } else if (isUpdated==-1) {
+                        networkServer.sendMessage(nickname,
+                                Command.errorCommand(
+                                        String.format("Имя %s уже используется!",
+                                                newUsername)));
+                    }
+                    break;
+                }
                 case PRIVATE_MESSAGE: {
                     PrivateMessageCommand commandData = (PrivateMessageCommand) command.getData();
                     String receiver = commandData.getReceiver();
@@ -166,6 +189,7 @@ public class ClientHandler {
         }
         else {
             nickname = username;
+
             String message = nickname + " зашел в чат!";
             networkServer.broadcastMessage(Command.messageCommand(null, message), this);
             commandData.setUsername(nickname);

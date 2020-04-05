@@ -60,6 +60,13 @@ public class Command implements Serializable {
         return command;
     }
 
+    public static Command updateUserNameCommand(String username, String newUsername, List<String> users) {
+        Command command = new Command();
+        command.type = CommandType.UPDATE_USERNAME;
+        command.data = new UpdateUserNameCommand(username, newUsername, users);
+        return command;
+    }
+
     public static Command updateUsersListCommand(List<String> users) {
         Command command = new Command();
         command.type = CommandType.UPDATE_USERS_LIST;
