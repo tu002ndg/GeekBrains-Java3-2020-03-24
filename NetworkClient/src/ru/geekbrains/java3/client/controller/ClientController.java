@@ -1,16 +1,20 @@
 package ru.geekbrains.java3.client.controller;
 
+import ru.geekbrains.java3.client.model.FileService;
 import ru.geekbrains.java3.client.model.NetworkService;
 import ru.geekbrains.java3.client.view.AuthDialog;
 import ru.geekbrains.java3.client.view.ClientChat;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import static ru.geekbrains.java3.client.Command.*;
 
 public class ClientController {
+    private static final long NUM_LAST_MESSAGES = 100;
     private final NetworkService networkService;
+    private final FileService fileService;
     private final AuthDialog authDialog;
     private final ClientChat clientChat;
     private String nickname;
@@ -18,6 +22,7 @@ public class ClientController {
 
     public ClientController(String serverHost, int serverPort) {
         this.networkService = new NetworkService(serverHost, serverPort);
+        this.fileService = new FileService();
         this.authDialog = new AuthDialog(this);
         this.clientChat = new ClientChat(this);
     }
@@ -40,6 +45,7 @@ public class ClientController {
     private void openChat() {
         authDialog.dispose();
         networkService.setMessageHandler(clientChat::appendMessage);
+        fileService.setArchiveFileName(nickname);
         clientChat.setVisible(true);
     }
 
@@ -98,10 +104,7 @@ public class ClientController {
 
     public void shutdown() {
         networkService.close();
-    }
-
-    public String getUsername() {
-        return nickname;
+        fileService.close();
     }
 
     public void updateUsersList(List<String> users) {
@@ -116,5 +119,18 @@ public class ClientController {
             clientChat.setTitle(nickname);
         }
         updateUsersList(users);
+    }
+
+    // Сохранить сообщение в истории чата
+    public void saveMessageInArchive(String message) throws IOException {
+
+        fileService.putMessageToArchveFile(message);
+    }
+
+    // Получить историю сообщений из архива
+    public List getMessageArchive() throws IOException {
+        List<String>  messages =
+                fileService.getArchiveFromFile(NUM_LAST_MESSAGES);
+        return messages;
     }
 }
